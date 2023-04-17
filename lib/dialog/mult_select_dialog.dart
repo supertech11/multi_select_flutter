@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../util/multi_select_actions.dart';
 import '../util/multi_select_item.dart';
 import '../util/multi_select_list_type.dart';
+import '../button/custom_outline_button.dart';
 
 /// A dialog containing either a classic checkbox style list, or a chip style list.
 class MultiSelectDialog<T> extends StatefulWidget with MultiSelectActions<T> {
@@ -216,118 +217,151 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return Dialog(
       backgroundColor: widget.backgroundColor,
-      title: widget.searchable == false
-          ? widget.title ?? const Text("Select")
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _showSearch
-                    ? Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 10),
-                          child: TextField(
-                            style: widget.searchTextStyle,
-                            decoration: InputDecoration(
-                              hintStyle: widget.searchHintStyle,
-                              hintText: widget.searchHint ?? "Search",
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: widget.selectedColor ??
-                                      Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                            onChanged: (val) {
-                              List<MultiSelectItem<T>> filteredList = [];
-                              filteredList =
-                                  widget.updateSearchQuery(val, widget.items);
-                              setState(() {
-                                if (widget.separateSelectedItems) {
-                                  _items =
-                                      widget.separateSelected(filteredList);
-                                } else {
-                                  _items = filteredList;
-                                }
-                              });
-                            },
-                          ),
-                        ),
-                      )
-                    : widget.title ?? Text("Select"),
-                IconButton(
-                  icon: _showSearch
-                      ? widget.closeSearchIcon ?? Icon(Icons.close)
-                      : widget.searchIcon ?? Icon(Icons.search),
-                  onPressed: () {
-                    setState(() {
-                      _showSearch = !_showSearch;
-                      if (!_showSearch) {
-                        if (widget.separateSelectedItems) {
-                          _items = widget.separateSelected(widget.items);
-                        } else {
-                          _items = widget.items;
-                        }
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-      contentPadding:
+      insetPadding:
           widget.listType == null || widget.listType == MultiSelectListType.LIST
               ? EdgeInsets.only(top: 12.0)
               : EdgeInsets.all(20),
-      content: Container(
-        height: widget.height,
-        width: widget.width ?? MediaQuery.of(context).size.width * 0.73,
-        child: widget.listType == null ||
-                widget.listType == MultiSelectListType.LIST
-            ? ListView.builder(
-                itemCount: _items.length,
-                itemBuilder: (context, index) {
-                  return _buildListItem(_items[index]);
-                },
-              )
-            : SingleChildScrollView(
-                child: Wrap(
-                  children: _items.map(_buildChipItem).toList(),
-                ),
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            widget.searchable == false
+                ? widget.title ?? const Text("Select")
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _showSearch
+                          ? Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(left: 10),
+                                child: TextField(
+                                  style: widget.searchTextStyle,
+                                  decoration: InputDecoration(
+                                    hintStyle: widget.searchHintStyle,
+                                    hintText: widget.searchHint ?? "Search",
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: widget.selectedColor ??
+                                            Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (val) {
+                                    List<MultiSelectItem<T>> filteredList = [];
+                                    filteredList = widget.updateSearchQuery(
+                                        val, widget.items);
+                                    setState(() {
+                                      if (widget.separateSelectedItems) {
+                                        _items = widget
+                                            .separateSelected(filteredList);
+                                      } else {
+                                        _items = filteredList;
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                            )
+                          : widget.title ?? Text("Select"),
+                      IconButton(
+                        icon: _showSearch
+                            ? widget.closeSearchIcon ?? Icon(Icons.close)
+                            : widget.searchIcon ?? Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {
+                            _showSearch = !_showSearch;
+                            if (!_showSearch) {
+                              if (widget.separateSelectedItems) {
+                                _items = widget.separateSelected(widget.items);
+                              } else {
+                                _items = widget.items;
+                              }
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+            Expanded(
+              child: Container(
+                height: widget.height,
+                width: widget.width ?? MediaQuery.of(context).size.width * 0.73,
+                child: widget.listType == null ||
+                        widget.listType == MultiSelectListType.LIST
+                    ? ListView.builder(
+                        itemCount: _items.length,
+                        itemBuilder: (context, index) {
+                          return _buildListItem(_items[index]);
+                        },
+                      )
+                    : SingleChildScrollView(
+                        child: Wrap(
+                          children: _items.map(_buildChipItem).toList(),
+                        ),
+                      ),
               ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: widget.cancelText ??
-              Text(
-                "CANCEL",
-                style: TextStyle(
-                  color: (widget.selectedColor != null &&
-                          widget.selectedColor != Colors.transparent)
-                      ? widget.selectedColor!.withOpacity(1)
-                      : Theme.of(context).primaryColor,
-                ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomOutlineButton(
+                      label: widget.cancelText ??
+                          Text(
+                            "CANCEL",
+                            style: TextStyle(
+                              color: (widget.selectedColor != null &&
+                                      widget.selectedColor !=
+                                          Colors.transparent)
+                                  ? widget.selectedColor!.withOpacity(1)
+                                  : Theme.of(context).primaryColor,
+                            ),
+                          ),
+                      key: const ValueKey("no"),
+                      hasBorder: false,
+                      buttonColor: Color(0xffEDE7FE),
+                      labelColor: Color(0xff3C0BCB),
+                      onPressed: () {
+                        widget.onCancelTap(context, widget.initialValue);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: CustomOutlineButton(
+                      label: widget.confirmText ??
+                          Text(
+                            'OK',
+                            style: TextStyle(
+                              color: (widget.selectedColor != null &&
+                                      widget.selectedColor !=
+                                          Colors.transparent)
+                                  ? widget.selectedColor!.withOpacity(1)
+                                  : Theme.of(context).primaryColor,
+                            ),
+                          ),
+                      hasBorder: false,
+                      key: const ValueKey("yes"),
+                      buttonColor: Color(0xff3C0BCB),
+                      labelColor: Colors.white,
+                      onPressed: () {
+                        widget.onConfirmTap(
+                            context, _selectedValues, widget.onConfirm);
+                      },
+                    ),
+                  ),
+                ],
               ),
-          onPressed: () {
-            widget.onCancelTap(context, widget.initialValue);
-          },
+            ),
+          ],
         ),
-        TextButton(
-          child: widget.confirmText ??
-              Text(
-                'OK',
-                style: TextStyle(
-                  color: (widget.selectedColor != null &&
-                          widget.selectedColor != Colors.transparent)
-                      ? widget.selectedColor!.withOpacity(1)
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
-          },
-        )
-      ],
+      ),
     );
   }
 }
