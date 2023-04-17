@@ -230,68 +230,63 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.topLabel != null) widget.topLabel!,
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              child: widget.searchable == false
-                  ? widget.title ?? const Text("Select")
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        _showSearch
-                            ? Expanded(
-                                child: Container(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: TextField(
-                                    style: widget.searchTextStyle,
-                                    decoration: InputDecoration(
-                                      hintStyle: widget.searchHintStyle,
-                                      hintText: widget.searchHint ?? "Search",
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: widget.selectedColor ??
-                                              Theme.of(context).primaryColor,
-                                        ),
+            widget.searchable == false
+                ? widget.title ?? const Text("Select")
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _showSearch
+                          ? Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(left: 10),
+                                child: TextField(
+                                  style: widget.searchTextStyle,
+                                  decoration: InputDecoration(
+                                    hintStyle: widget.searchHintStyle,
+                                    hintText: widget.searchHint ?? "Search",
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: widget.selectedColor ??
+                                            Theme.of(context).primaryColor,
                                       ),
                                     ),
-                                    onChanged: (val) {
-                                      List<MultiSelectItem<T>> filteredList =
-                                          [];
-                                      filteredList = widget.updateSearchQuery(
-                                          val, widget.items);
-                                      setState(() {
-                                        if (widget.separateSelectedItems) {
-                                          _items = widget
-                                              .separateSelected(filteredList);
-                                        } else {
-                                          _items = filteredList;
-                                        }
-                                      });
-                                    },
                                   ),
+                                  onChanged: (val) {
+                                    List<MultiSelectItem<T>> filteredList = [];
+                                    filteredList = widget.updateSearchQuery(
+                                        val, widget.items);
+                                    setState(() {
+                                      if (widget.separateSelectedItems) {
+                                        _items = widget
+                                            .separateSelected(filteredList);
+                                      } else {
+                                        _items = filteredList;
+                                      }
+                                    });
+                                  },
                                 ),
-                              )
-                            : widget.title ?? Text("Select"),
-                        IconButton(
-                          icon: _showSearch
-                              ? widget.closeSearchIcon ?? Icon(Icons.close)
-                              : widget.searchIcon ?? Icon(Icons.search),
-                          onPressed: () {
-                            setState(() {
-                              _showSearch = !_showSearch;
-                              if (!_showSearch) {
-                                if (widget.separateSelectedItems) {
-                                  _items =
-                                      widget.separateSelected(widget.items);
-                                } else {
-                                  _items = widget.items;
-                                }
+                              ),
+                            )
+                          : widget.title ?? Text("Select"),
+                      IconButton(
+                        icon: _showSearch
+                            ? widget.closeSearchIcon ?? Icon(Icons.close)
+                            : widget.searchIcon ?? Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {
+                            _showSearch = !_showSearch;
+                            if (!_showSearch) {
+                              if (widget.separateSelectedItems) {
+                                _items = widget.separateSelected(widget.items);
+                              } else {
+                                _items = widget.items;
                               }
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-            ),
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
             Expanded(
               child: Container(
                 height: widget.height,
