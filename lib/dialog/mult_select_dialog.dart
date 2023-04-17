@@ -44,6 +44,7 @@ class MultiSelectDialog<T> extends StatefulWidget with MultiSelectActions<T> {
 
   /// Set the placeholder text of the search field.
   final String? searchHint;
+  final Widget? topLabel;
 
   /// A function that sets the color of selected items based on their value.
   /// It will either set the chip color, or the checkbox color depending on the list type.
@@ -98,6 +99,7 @@ class MultiSelectDialog<T> extends StatefulWidget with MultiSelectActions<T> {
     this.unselectedColor,
     this.searchIcon,
     this.closeSearchIcon,
+    this.topLabel,
     this.itemsTextStyle,
     this.searchHintStyle,
     this.searchTextStyle,
@@ -221,12 +223,13 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
       backgroundColor: widget.backgroundColor,
       insetPadding:
           widget.listType == null || widget.listType == MultiSelectListType.LIST
-              ? EdgeInsets.only(top: 12.0)
+              ? EdgeInsets.all(20.0)
               : EdgeInsets.all(20),
       child: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (widget.topLabel != null) widget.topLabel!,
             widget.searchable == false
                 ? widget.title ?? const Text("Select")
                 : Row(
@@ -287,7 +290,7 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
             Expanded(
               child: Container(
                 height: widget.height,
-                width: widget.width ?? MediaQuery.of(context).size.width * 0.73,
+                width: widget.width ?? MediaQuery.of(context).size.width * 0.90,
                 child: widget.listType == null ||
                         widget.listType == MultiSelectListType.LIST
                     ? ListView.builder(
@@ -305,7 +308,7 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Row(
                 children: [
                   Expanded(
