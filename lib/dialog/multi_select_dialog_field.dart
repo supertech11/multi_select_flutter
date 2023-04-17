@@ -22,6 +22,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
 
   /// The text at the top of the dialog.
   final Widget? title;
+  final Widget? topLabel;
 
   /// List of items to select from.
   final List<MultiSelectItem<V>> items;
@@ -113,6 +114,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.buttonText,
     this.buttonIcon,
     this.listType,
+    this.topLabel,
     this.decoration,
     this.onSelectionChanged,
     this.chipDisplay,
@@ -157,6 +159,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 chipDisplay: chipDisplay,
                 decoration: decoration,
                 listType: listType,
+                topLabel: topLabel,
                 onConfirm: onConfirm,
                 onSelectionChanged: onSelectionChanged,
                 initialValue: initialValue,
@@ -197,6 +200,8 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final MultiSelectChipDisplay<V>? chipDisplay;
   final List<V> initialValue;
   final void Function(List<V>)? onConfirm;
+  final Widget? topLabel;
+
   final bool? searchable;
   final Text? confirmText;
   final Text? cancelText;
@@ -232,6 +237,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
     this.initialValue = const [],
     this.searchable,
     this.confirmText,
+    this.topLabel,
     this.cancelText,
     this.barrierColor,
     this.selectedColor,
@@ -268,6 +274,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
         searchable = field.searchable,
         confirmText = field.confirmText,
         cancelText = field.cancelText,
+        topLabel = field.topLabel,
         barrierColor = field.barrierColor,
         selectedColor = field.selectedColor,
         dialogHeight = field.dialogHeight,
@@ -392,6 +399,7 @@ class __MultiSelectDialogFieldViewState<V>
           backgroundColor: widget.backgroundColor,
           colorator: widget.colorator,
           searchHint: widget.searchHint,
+          topLabel: widget.topLabel,
           selectedColor: widget.selectedColor,
           onSelectionChanged: widget.onSelectionChanged,
           height: widget.dialogHeight,
