@@ -226,6 +226,10 @@ class _MultiSelectDialogState<T> extends State<MultiSelectDialog<T>> {
               ? EdgeInsets.all(20.0)
               : EdgeInsets.all(20),
       child: Container(
+        constraints: BoxConstraints(
+          maxWidth: 800,
+          maxHeight: 800,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
